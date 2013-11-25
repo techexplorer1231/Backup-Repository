@@ -4,6 +4,7 @@ var tempSumJson = [];
 var eachJson = [];
 var compOperatorId = null;
 var tempTripSummary;
+var tmpFirstname;
 
 //variables to help in addition of points
 var tmpGeoFenceViolationCnt = 0;
@@ -19,13 +20,13 @@ var tmpTotalCredits = 0;
 
 
 $(document).ready(function(e) {
-    //console.log("will Start test now");
     childArray = callParentService();
     console.log(JSON.stringify(childArray));
-    //console.log("Completed Test");
-    //console.log("call trip summary");
+    populateDateCombobox();
     tripSummary();
-    tripSummaryDetails();
+    createOperatorTable();
+    commonPopulateDetailsUsingAnchor();
+    commonPopulateDetailsUsingDrpDwn();
 });
 
 function callParentService() {
@@ -79,6 +80,7 @@ function callChildService(parent, opId) {
                             this.tripDetail = child[i].tripDetail;
                             this.tripId = child[i].tripId;
                             this.tripSnoozed = child[i].tripSnoozed;
+                            this.dropDown = "<select class='operatorRole'><option>Check</option></select>";
                         };
                         childArray.push(tempJson);
                     }
@@ -146,6 +148,7 @@ function callCreateSumJSON(tempChildArray) {
         this.tripDetail = tempChildArray.tripDetail;
         this.tripId = tempChildArray.tripId;
         this.tripSnoozed = tempChildArray.tripSnoozed;
+        this.dropDown = "<select class='operatorRole'><option>Check</option></select>";
         //create Json
     };
 }
@@ -192,13 +195,144 @@ function addPoints(actual, tmp) {
     return returnValue;
 }
 
-var name = "henry"
-function tripSummaryDetails() {
+function tripSummaryDetails(tmpFirstname) {
+    eachJson = [];
     for (var i = 0; i < childArray.length; i++) {
         //console.log(childArray[i].firstName);
-        if(childArray[i].firstName == "kate"){
+        if (childArray[i].firstName == tmpFirstname) {
             eachJson.push(childArray[i]);
         }
     }
-     console.log(JSON.stringify(eachJson));
+    console.log(JSON.stringify(eachJson));
 }
+
+
+//fUNCTIONS TO POPULATE TABLES FROM ECLIPSE
+function createOperatorTable() {
+    $("#dbOperatorTbl").jsonTable(
+            {
+                head: ['Operator', 'Total Miles', 'Total Points', 'Curfew',
+                    'Violations Speed', 'Boundary', 'Manage'],
+                json: ['firstName', 'distanceCovered', 'totalPointsAfterTrip', 'curfewViolationCnt',
+                    'speedViolationCnt', 'geoFenceViolationCnt', 'dropDown']
+            });
+
+    $("#dbOperatorTbl").jsonTableUpdate({
+        source: tempSumJson,
+        rowClass: "operatorRowClass",
+        callback: function() {
+        }
+    });
+    $('.operatorRowClass td:first-child').wrapInner(
+            "<a href='#' id='anchorClickTripSummary'><u></u></div>");
+}
+
+function commonPopulateDetailsUsingAnchor(e) {
+    var thisObj = this;
+    $("a#anchorClickTripSummary").click(function(e) {
+        // e.preventDefault();
+        $('.dynamicThead').remove();
+        $('#mapRow').remove();
+        $('.operatorRole').val('Select');
+        row_index = $(this).closest('td').parent()[0].sectionRowIndex;
+        tmpFirstname = tempSumJson[row_index].firstName;
+        thisObj.tripSummaryDetails(tmpFirstname);
+        thisObj.commonPopulateDetails(e, row_index);
+    });
+}
+;
+
+function commonPopulateDetailsUsingDrpDwn(e) {
+    var thisObj = this;
+    $("#dbOperatorTbl .operatorRole").on('change', function(e) {
+        $('.dynamicThead').remove();
+        $('#mapRow').remove();
+        row_index = $(this).closest('td').parent()[0].sectionRowIndex;
+        tmpFirstname = tempSumJson[row_index].firstName;
+        thisObj.tripSummaryDetails(tmpFirstname);
+        thisObj.commonPopulateDetails(e, row_index);
+    });
+}
+
+function commonPopulateDetails(e, row_index) {
+
+    var strMobileNum = eachJson[0].primaryPhoneNumber;
+    var strEmailId = eachJson[0].primaryEmailAddress;
+    var strReceiveAlertVia = "SMS text, email";
+    var strActivationCode = "PX87492G8H";
+
+    htmlThead = ("<tr class='dynamicThead' style=\"background-color: #e4e4e4; font-family: Trebuchet MS; color: #5b5b5b; vertical-align: middle;\"><td class='dynamicThead' colspan=\"7\"><div id=\"infoHeader\" ><p class='childTableHead'>Mobile Phone: "
+            + strMobileNum
+            + " Email Address: "
+            + strEmailId
+            + " receiving alerts via: "
+            + strReceiveAlertVia
+            + "<br>Activation Code : &lt;" + strActivationCode + "&gt;</p></div></td></tr>");
+    htmlTable = ("<tr style=\"font-family: Trebuchet MS; color: #5b5b5b; vertical-align: middle;\" id='mapRow'><td colspan=\"6\"><table style=\"border-bottom: 2px solid #5b5b5b;\" id='dynamicdataTable' width='100%'><thead></thead><tbody></tbody></table></td></tr>");
+    $('#dbOperatorTbl > tbody > tr:eq(' + row_index + ')').after(htmlThead,
+            htmlTable);
+    $("#dynamicdataTable").jsonTable({
+        head: ['Trips', 'Total Miles', 'Total Points', 'Curfew',
+            'Violations Speed', 'Boundary', 'Manage'],
+        json: ['tripId', 'distanceCovered', 'totalPointsAfterTrip', 'curfewViolationCnt',
+            'speedViolationCnt', 'geoFenceViolationCnt', 'dropDown']
+    });
+
+    $("#dynamicdataTable").jsonTableUpdate({
+        source: eachJson,
+        rowClass: "rowClass",
+        callback: function() {
+            // $("#mssg").html("Table updated at " + new
+            // Date());
+        }
+    });
+}
+;
+
+
+//populating combo box
+function populateDateCombobox() {
+    var strMonth = [];
+    var thisObj = this;
+    var d = new Date();
+    
+   
+
+//	var strMonth = [ "<option>January, 2013</option>",
+//			"<option>February, 2013</option>", "<option>March, 2013</option>",
+//			"<option>April, 2013</option>", "<option>May, 2013</option>",
+//			"<option>June, 2013</option>", "<option>July, 2013</option>",
+//			"<option>August, 2013</option>",
+//			"<option>September, 2013</option>",
+//			"<option>October, 2013</option>",
+//			"<option>November, 2013</option>",
+//			"<option>December, 2013</option>" ];
+//
+//	var strWeek = [ "<option>Sept 25 - Oct 1, 2013</option>",
+//			"<option>Sept 25 - Oct 1, 2013</option>",
+//			"<option>Sept 25 - Oct 1, 2013</option>",
+//			"<option>Sept 25 - Oct 1, 2013</option>",
+//			"<option>Sept 25 - Oct 1, 2013</option>" ];
+
+            for (i = 0; i < strWeek.length; i++) {
+        $("select#operatorDateCombobox").append(strWeek[i]);
+    }
+    $("a#dateComboLnk").click(function(e) {
+        if ($("a#dateComboLnk").text() == "View Weekly Summary") {
+            $("a#dateComboLnk").text("View Monthly Summary");
+            $("div#reportLabel.nonHeading").text("Weekly Summary");
+            $("select#operatorDateCombobox").empty();
+            for (i = 0; i < strWeek.length; i++) {
+                $("select#operatorDateCombobox").append(strWeek[i]);
+            }
+        } else if ($("a#dateComboLnk").text() == "View Monthly Summary") {
+            $("a#dateComboLnk").text("View Weekly Summary");
+            $("div#reportLabel.nonHeading").text("Monthly Summary");
+            $("select#operatorDateCombobox").empty();
+            for (i = 0; i < strMonth.length; i++) {
+                $("select#operatorDateCombobox").append(strMonth[i]);
+            }
+        }
+    });
+}
+;

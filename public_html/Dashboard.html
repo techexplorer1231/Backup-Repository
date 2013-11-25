@@ -15,11 +15,60 @@ and open the template in the editor.
     </head>
     <body>
         <div>TODO write content</div>
-        <table class="operator1" id="operatorNoTrip">
-            <thead>
+        <table id="dbOperatorTbl" class="dbOperator"
+               style="width: 100%; height: 95%">
+            <thead class="nonHeading">
             </thead>
-            <tbody>
+            <tbody class="nonHeading">
             </tbody>
+        </table>
+        
+<!--        logic for combo box-->
+        <table class="nonHeading"
+               style="margin-top: 1px; height: 100%; width: 100%"
+               cellpadding="4px">
+            <!--Pratap changing here  -->
+            <tr style="width: 100%; height: 30%">
+                <td colspan="6"
+                    style="background-color: #e4e4e4; font-family: Trebuchet MS; color: #5b5b5b; vertical-align: middle;">
+                    <table class="nonHeading"
+                           style="height: 100%; width: 100%;">
+                        <!--Pratap changing here  -->
+                        <tr style="width: 100%; height: 30%">
+                            <td>
+                                <div id="reportLabel" class="nonHeading"
+                                     style="float: left; padding-top: 5px">Weekly
+                                    Summary</div>
+                            </td>
+                            <td><select id="operatorDateCombobox">
+                                </select></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td align="right"><a id="dateComboLnk"
+                                                 style="cursor: pointer; float: right; color: blue"
+                                                 href="#">View Monthly Summary</a></td>
+                        </tr>
+                    </table>
+                </td>
+
+            </tr>
+            <tr style="width: 100%" bgcolor="#f6f6f6">
+                <td style="width: 100%;">
+                    <div class="nonHeading" id="listing4">
+                        <table id="dbOperatorTbl" class="dbOperator"
+                               style="width: 100%; height: 95%">
+                            <thead class="nonHeading">
+                            </thead>
+                            <tbody class="nonHeading">
+                            </tbody>
+                        </table>
+
+                    </div>
+                </td>
+            </tr>
+
         </table>
     </body>
 </html>

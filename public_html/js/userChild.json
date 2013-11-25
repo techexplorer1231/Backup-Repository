@@ -21,7 +21,7 @@
     "tripProcessed": "Yes",
     "recordCreatedDate": 1384503102,
     "tripDetail": null,
-    "tripId": "kate_welsh",
+    "tripId": "Trip1",
     "tripTrail": [
       {
         "altitude": 0,
@@ -63,7 +63,7 @@
     "tripProcessed": "Yes",
     "recordCreatedDate": 1384503102,
     "tripDetail": null,
-    "tripId": "kate_welsh",
+    "tripId": "Trip2",
     "tripTrail": [
       {
         "altitude": 0,
@@ -105,7 +105,7 @@
     "tripProcessed": "Yes",
     "recordCreatedDate": 1384503102,
     "tripDetail": null,
-    "tripId": "henry_welsh",
+    "tripId": "Trip3",
     "tripTrail": [
       {
         "altitude": 0,
@@ -147,7 +147,7 @@
     "tripProcessed": "Yes",
     "recordCreatedDate": 1384503102,
     "tripDetail": null,
-    "tripId": "henry_welsh",
+    "tripId": "Trip4",
     "tripTrail": [
       {
         "altitude": 0,
