@@ -88,7 +88,7 @@
       "operatorId": "12346",
       "eUAAccepted": true,
       "statusChangedDate": 0,
-      "operatorStatus": "NotEnrolled",
+      "operatorStatus": "Enrolled",
       "snoozeStartTime": null,
       "snoozeEndTime": null,
       "activationStatus": null,

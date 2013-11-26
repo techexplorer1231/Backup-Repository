@@ -21,14 +21,13 @@ var tmpTotalCredits = 0;
 
 $(document).ready(function(e) {
     childArray = callParentService();
-    //console.log(JSON.stringify(childArray));
+    console.log(JSON.stringify(childArray));
     populateDateCombobox();
-    tripSummary();
     createOperatorTable();
     commonPopulateDetailsUsingAnchor();
     commonPopulateDetailsUsingDrpDwn();
-    //console.log(JSON.stringify(tempSumJson));   //output for SUM Json
-    //console.log(JSON.stringify(eachJson));
+    console.log(JSON.stringify(tempSumJson));   //output for SUM Json
+    console.log(JSON.stringify(eachJson));
 });
 
 function callParentService() {
@@ -39,11 +38,20 @@ function callParentService() {
             async: false,
             success: function(parent) {
                 for (var i = 0; i < parent.childResources.length; i++) {
-                    childArray = callChildService(parent.childResources[i], parent.childResources[i].operatorId);
+                    if (parent.childResources[i].eUAAccepted == "false" || parent.childResources[i].operatorStatus == "Pending"
+                            || parent.childResources[i].operatorStatus == "ReadyToTakeFirstTrip" || parent.childResources[i].operatorStatus == "NotEnrolled") {
+                        alert("Hi");
+                    }
+                    else {
+                        childArray = callChildService(parent.childResources[i], parent.childResources[i].operatorId);
+                    }
                 }
             }
         });
     };
+    if (childArray.length != 0) {
+        tripSummary();
+    }
     return childArray;
 }
 
@@ -94,11 +102,12 @@ function callChildService(parent, opId) {
 }
 
 function tripSummary() {
+    var thisObj = this;
 
-    compOperatorId = childArray[0].operatorId;
+    thisObj.compOperatorId = thisObj.childArray[0].operatorId;
     // alert(compOperatorId);
-    for (var i = 0; i < childArray.length; i++) {
-        if (compOperatorId == childArray[i].operatorId) {
+    for (var i = 0; i < thisObj.childArray.length; i++) {
+        if (thisObj.compOperatorId == thisObj.childArray[i].operatorId) {
             callCreateSumJSON(childArray[i]);
         }
         else {
@@ -205,7 +214,6 @@ function tripSummaryDetails(tmpFirstname) {
             eachJson.push(childArray[i]);
         }
     }
-
 }
 
 
@@ -418,41 +426,152 @@ function populateDateCombobox() {
     });
 }
 
-function getStartAndEndTime(tmpStartDate, tmpEndDate) {
-    var time = new function() {
 
-    }
-    return time;
-}
-
-function epochToHumanDate(epochTime) {
-
-    var myDateEpochToHuman = new Date(epochTime * 1000);
-    Month = myDateEpochToHuman.toLocaleString("en-us", {month: "long"});
-    Year = myDateEpochToHuman.toLocaleString("en-us", {year: "numeric"});
-    Day = myDateEpochToHuman.toLocaleString("en-us", {day: "2-digit"});
-
-    dateFormat = Month + " " + Day + ", " + Year;
-
-    return dateFormat;
-
-}
-;
-
-function humanToEpochDate(month, year) {
-
-    if (month != "" && year != "") {
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-        dateFormat = months[parseInt(month - 1)] + " 1, " + year + " 00:00:00";
-
-        var myDateHumanToEpoch = new Date(dateFormat);
-        var myEpoch = myDateHumanToEpoch.getTime() / 1000.0;
-        return myEpoch;
-    }
-    return null;
-}
-;
-
-
+//  DashboardManager.prototype.populateSelectOperatorCombobox = function() {
+//	var select = $('select.operatorRole');
+//	strLine = "------------------";
+//	options1 = [ "<option>Select</option>",
+//			"<option>View Trip Details</option>",
+//			"<option>View/Edit Contract</option>",
+//			"<option>Edit Information</option>",
+//			'<option value="' + strLine + '"disabled>' + strLine + '</option>',
+//			"<option>Resend Activation Code</option>",
+//			"<option>Unenroll</option>" ], options2 = [
+//			"<option>Select</option>", "<option>View Trip Details</option>",
+//			'<option value="' + strLine + '"disabled>' + strLine + '</option>',
+//			"<option>Enroll</option>" ], options3 = [
+//			"<option>Select</option>", "<option>View/Edit Contract</option>",
+//			"<option>Edit Information</option>",
+//			'<option value="' + strLine + '"disabled>' + strLine + '</option>',
+//			"<option>Resend Activation Code</option>",
+//			"<option>Unenroll</option>" ], options4 = [
+//			"<option>Select</option>", "<option>Create Contract</option>",
+//			"<option>Edit Information</option>",
+//			'<option value="' + strLine + '"disabled>' + strLine + '</option>',
+//			"<option>Unenroll</option>" ], options5 = [
+//			"<option>Select</option>", "<option>Enroll</option>" ];
+//
+//	// Mock values for various parameter
+//	var enrolled = true, taken_trip = true, age_lt_20 = true, contract_complete = true, insatlled_activated_app = true, role;
+//
+//	/* Have Enrolled */
+//	if (enrolled == true) {
+//
+//		if (taken_trip == true) {
+//			/*
+//			 * Case when user has Drop down number = 8 enrolled = true trip
+//			 * taken = true age less then 20 = true completed contract = true
+//			 * installed and activated app = true
+//			 */
+//
+//			if ((age_lt_20 == true) && (contract_complete == true)
+//					&& (insatlled_activated_app == true)) {
+//				role = options1;
+//			}
+//
+//			/*
+//			 * Case when user has Drop down number = 9 enrolled = true trip
+//			 * taken = true age less then 20 = false completed contract = true
+//			 * installed and activated app = true
+//			 */
+//			else if ((age_lt_20 == false) && (contract_complete == true)
+//					&& (insatlled_activated_app == true)) {
+//				role = options2;
+//			}
+//		}
+//
+//		if (taken_trip == false) {
+//			// Users who have not taken trip
+//			/*
+//			 * Case when user has Drop down number = 11 enrolled = true trip
+//			 * taken = false age less then 20 = true completed contract = true
+//			 * installed and activated app = true
+//			 */
+//			if ((age_lt_20 == true) && (contract_complete == true)
+//					&& (insatlled_activated_app == true)) {
+//				role = options3;
+//			}
+//
+//			// Users who have not taken trip
+//			/*
+//			 * Case when user has Drop down number = 11 enrolled = true trip
+//			 * taken = false age less then 20 = true completed contract = true
+//			 * installed and activated app = false
+//			 */
+//			else if ((age_lt_20 == true) && (contract_complete == true)
+//					&& (insatlled_activated_app == false)) {
+//				role = options3;
+//			}
+//			// Users who have not taken trip
+//			/*
+//			 * Case when user has Drop down number = 13 enrolled = true trip
+//			 * taken = false age less then 20 = true completed contract = false
+//			 * installed and activated app = falsex
+//			 */
+//			else if ((age_lt_20 == true) && (contract_complete == false)
+//					&& (insatlled_activated_app == false)) {
+//				role = options4;
+//			}
+//		}
+//	}
+//
+//	if (enrolled == false) {
+//		/* Not Enrolled */
+//		/*
+//		 * Case when user has Drop down number = 9 enrolled = false trip taken =
+//		 * true age less then 20 = true completed contract = true installed and
+//		 * activated app = true
+//		 */
+//		if ((taken_trip == true) && (age_lt_20 == true)
+//				&& (contract_complete == true)
+//				&& (insatlled_activated_app == true)) {
+//			role = options2;
+//		}
+//
+//		// Users who have not taken trip
+//		/*
+//		 * Case when user has Drop down number = 14 enrolled = trip taken = age
+//		 * less then 20 = completed contract = installed and activated app =
+//		 */
+//		else if ((taken_trip == false) && (age_lt_20 == false)
+//				&& (contract_complete == false)
+//				&& (insatlled_activated_app == false)) {
+//			role = options5;
+//		}
+//	}
+//
+//	switch (role) {
+//	case options1:
+//		options = options1;
+//		for (i = 0; i < options.length; i++) {
+//			$(select).append(options[i]);
+//		}
+//		break;
+//	case options2:
+//		options = options2;
+//		for (i = 0; i < options.length; i++) {
+//			$(select).append(options[i]);
+//		}
+//		break;
+//	case options3:
+//		options = options3;
+//		for (i = 0; i < options.length; i++) {
+//			$(select).append(options[i]);
+//		}
+//		break;
+//	case options4:
+//		options = options4;
+//		for (i = 0; i < options.length; i++) {
+//			$(select).append(options[i]);
+//		}
+//		break;
+//	case options5:
+//		options = options5;
+//		for (i = 0; i < options.length; i++) {
+//			$(select).append(options[i]);
+//		}
+//		break;
+//
+//	}
+//};
+ 
