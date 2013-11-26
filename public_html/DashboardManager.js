@@ -21,12 +21,14 @@ var tmpTotalCredits = 0;
 
 $(document).ready(function(e) {
     childArray = callParentService();
-    console.log(JSON.stringify(childArray));
+    //console.log(JSON.stringify(childArray));
     populateDateCombobox();
     tripSummary();
     createOperatorTable();
     commonPopulateDetailsUsingAnchor();
     commonPopulateDetailsUsingDrpDwn();
+    //console.log(JSON.stringify(tempSumJson));   //output for SUM Json
+    //console.log(JSON.stringify(eachJson));
 });
 
 function callParentService() {
@@ -118,7 +120,7 @@ function tripSummary() {
 
     }
     tempSumJson.push(tempTripSummary);
-    console.log(JSON.stringify(tempSumJson));   //output for SUM Json
+
 }
 
 function callCreateSumJSON(tempChildArray) {
@@ -203,7 +205,7 @@ function tripSummaryDetails(tmpFirstname) {
             eachJson.push(childArray[i]);
         }
     }
-    console.log(JSON.stringify(eachJson));
+
 }
 
 
@@ -292,29 +294,109 @@ function commonPopulateDetails(e, row_index) {
 
 //populating combo box
 function populateDateCombobox() {
-    var strMonth = [];
     var thisObj = this;
-    var d = new Date();
-    
-   
 
-//	var strMonth = [ "<option>January, 2013</option>",
-//			"<option>February, 2013</option>", "<option>March, 2013</option>",
-//			"<option>April, 2013</option>", "<option>May, 2013</option>",
-//			"<option>June, 2013</option>", "<option>July, 2013</option>",
-//			"<option>August, 2013</option>",
-//			"<option>September, 2013</option>",
-//			"<option>October, 2013</option>",
-//			"<option>November, 2013</option>",
-//			"<option>December, 2013</option>" ];
-//
-//	var strWeek = [ "<option>Sept 25 - Oct 1, 2013</option>",
-//			"<option>Sept 25 - Oct 1, 2013</option>",
-//			"<option>Sept 25 - Oct 1, 2013</option>",
-//			"<option>Sept 25 - Oct 1, 2013</option>",
-//			"<option>Sept 25 - Oct 1, 2013</option>" ];
+    /*
+     * Logic For Month
+     */
+    var strMonth = [];
+    var tmpMonth = null;
+    var month_names = new Array( );
+    month_names[month_names.length] = "January";
+    month_names[month_names.length] = "February";
+    month_names[month_names.length] = "March";
+    month_names[month_names.length] = "April";
+    month_names[month_names.length] = "May";
+    month_names[month_names.length] = "June";
+    month_names[month_names.length] = "July";
+    month_names[month_names.length] = "August";
+    month_names[month_names.length] = "September";
+    month_names[month_names.length] = "October";
+    month_names[month_names.length] = "November";
+    month_names[month_names.length] = "December";
 
-            for (i = 0; i < strWeek.length; i++) {
+    var tmpStartDate = new Date();
+    var tmpEndDate = new Date();
+    var tmpValue = "1384518653/1384519066"
+    var tmpOption;
+
+    var date = new Date();
+    date.setDate(1);
+
+    //logic to get start and end epoch time  
+    tmpStartDate.setDate(1);
+    tmpOption = "<option value=" + (Math.round(tmpEndDate.getTime() / 1)) + "/" + (Math.round(tmpStartDate.getTime() / 1)) + ">"
+    //logic to get start and end epoch time
+
+    tmpMonth = month_names[date.getMonth()] + " ," + date.getFullYear()
+    strMonth.push(tmpOption + tmpMonth);
+    console.log(tmpStartDate + "------->" + tmpEndDate)
+    for (var i = 0; i < 5; i++) {
+
+        //logic to get start and end epoch time  
+        tmpStartDate.setMonth(tmpStartDate.getMonth() - 1);
+        tmpEndDate.setDate(0);
+        console.log(tmpStartDate + "------->" + tmpEndDate)
+        tmpOption = "<option value=" + (Math.round(tmpEndDate.getTime() / 1)) + "/" + (Math.round(tmpStartDate.getTime() / 1)) + ">"
+        //logic to get start and end epoch time
+
+        date.setMonth(date.getMonth() - 1);
+        tmpMonth = month_names[date.getMonth()] + " ," + date.getFullYear();
+        strMonth.push(tmpOption + tmpMonth);
+    }
+    /*
+     * End of Logic For Month
+     */
+
+
+    /*
+     * Logic For Week
+     */
+
+    var strWeek = [];
+    var from = new Date();
+    var to = new Date;
+    var tmpOption;
+    var tmpValue;
+
+    var month_namesfrWeeks = new Array();
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Jan";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Feb";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Mar";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Apr";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "May";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Jun";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Jul";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Aug";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Sep";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Oct";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Nov";
+    month_namesfrWeeks[month_namesfrWeeks.length] = "Dec";
+
+    //no need to change to date
+    from.setDate(from.getDate() - 7)
+
+    tmpOption = "<option value=" + from.getTime() + "/" + to.getTime() + ">"
+    tmpValue = month_namesfrWeeks[from.getMonth()] + " " + from.getDate() + "-" + month_namesfrWeeks[to.getMonth()] + " " + to.getDate() + "," + to.getFullYear();
+    strWeek.push(tmpOption + tmpValue)
+
+    for (var i = 0; i < 6; i++) {
+        from.setDate(from.getDate() - 7)
+        to.setDate(to.getDate() - 7)
+
+
+        tmpOption = "<option value=" + from.getTime() + "/" + to.getTime() + ">"
+        tmpValue = month_namesfrWeeks[from.getMonth()] + " " + from.getDate() + "-" + month_namesfrWeeks[to.getMonth()] + " " + to.getDate() + "," + to.getFullYear();
+        strWeek.push(tmpOption + tmpValue);
+    }
+    console.log(strWeek)
+
+
+    /*
+     * End Logic For Week
+     */
+
+    for (i = 0; i < strWeek.length; i++) {
         $("select#operatorDateCombobox").append(strWeek[i]);
     }
     $("a#dateComboLnk").click(function(e) {
@@ -335,4 +417,42 @@ function populateDateCombobox() {
         }
     });
 }
+
+function getStartAndEndTime(tmpStartDate, tmpEndDate) {
+    var time = new function() {
+
+    }
+    return time;
+}
+
+function epochToHumanDate(epochTime) {
+
+    var myDateEpochToHuman = new Date(epochTime * 1000);
+    Month = myDateEpochToHuman.toLocaleString("en-us", {month: "long"});
+    Year = myDateEpochToHuman.toLocaleString("en-us", {year: "numeric"});
+    Day = myDateEpochToHuman.toLocaleString("en-us", {day: "2-digit"});
+
+    dateFormat = Month + " " + Day + ", " + Year;
+
+    return dateFormat;
+
+}
 ;
+
+function humanToEpochDate(month, year) {
+
+    if (month != "" && year != "") {
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        dateFormat = months[parseInt(month - 1)] + " 1, " + year + " 00:00:00";
+
+        var myDateHumanToEpoch = new Date(dateFormat);
+        var myEpoch = myDateHumanToEpoch.getTime() / 1000.0;
+        return myEpoch;
+    }
+    return null;
+}
+;
+
+
